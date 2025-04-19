@@ -43,6 +43,7 @@ function CheckoutPage() {
             },
           },
         },
+        return_url: `${window.location.origin}/payment-result`, // Replace with your actual success/failure page URL
         redirect: 'if_required', // Handle SCA redirects
       },
     });
