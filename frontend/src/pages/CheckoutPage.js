@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { PaymentElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-
-// Replace with your actual publishable key
-const stripePromise = loadStripe('YOUR_TEST_PUBLISHABLE_KEY');
+import React, { useState } from 'react';
+import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 function CheckoutPage() {
   const stripe = useStripe();
@@ -17,32 +13,6 @@ function CheckoutPage() {
   });
   const [error, setError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [clientSecret, setClientSecret] = useState(null);
-
-  useEffect(() => {
-    // Fetch the clientSecret when the component mounts
-    const fetchClientSecret = async () => {
-      try {
-        const response = await fetch('https://serene-lotus-threads-backend.onrender.com/api/create-payment-intent', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ amount: 10000, currency: 'usd' }),
-        });
-        const data = await response.json();
-        if (data?.clientSecret) {
-          setClientSecret(data.clientSecret);
-        } else {
-          setError(data?.error || 'Failed to fetch client secret.');
-        }
-      } catch (e) {
-        setError(e.message);
-      }
-    };
-
-    fetchClientSecret();
-  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -83,25 +53,21 @@ function CheckoutPage() {
   return (
     <div>
       <h1>Checkout</h1>
-      {clientSecret ? (
-        <form onSubmit={handleSubmit}>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <div>
-            <label htmlFor="name">Name:</label>
-            <input type="text" id="name" name="name" value={shippingInfo.name} onChange={handleChange} required />
-          </div>
-          {/* ... other shipping fields ... */}
-          <div>
-            <h2>Payment Information</h2>
-            <PaymentElement />
-          </div>
-          <button type="submit" disabled={isProcessing || !stripe || !elements}>
-            {isProcessing ? 'Processing...' : 'Place Order'}
-          </button>
-        </form>
-      ) : (
-        <p>{error || 'Loading payment information...'}</p>
-      )}
+      <form onSubmit={handleSubmit}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input type="text" id="name" name="name" value={shippingInfo.name} onChange={handleChange} required />
+        </div>
+        {/* ... other shipping fields ... */}
+        <div>
+          <h2>Payment Information</h2>
+          <PaymentElement />
+        </div>
+        <button type="submit" disabled={isProcessing || !stripe || !elements}>
+          {isProcessing ? 'Processing...' : 'Place Order'}
+        </button>
+      </form>
     </div>
   );
 }
