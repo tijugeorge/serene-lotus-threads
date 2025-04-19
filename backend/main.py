@@ -8,9 +8,10 @@ app = FastAPI()
 
 # Configure CORS to allow requests from your Firebase Hosting domain (adjust as needed)
 origins = [
-    "https://your-app-name.firebaseapp.com",
-    "https://your-app-name.web.app",
-    "http://localhost:3000", # For local development
+    "https://serene-lotus-threads-frontend.web.app",  # Your Firebase Hosting URL
+    "https://serene-lotus-threads-frontend.onrender.com",  # (Keep this for now, or remove if you are sure you won't use it)
+    "http://localhost:3000",  # Your local development origin
+    # "*",  # Remove or comment out the wildcard in production
 ]
 
 app.add_middleware(
