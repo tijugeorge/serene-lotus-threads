@@ -29,7 +29,7 @@ function CheckoutPage() {
     setIsProcessing(true);
     setError(null);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         payment_method_data: {
@@ -43,19 +43,22 @@ function CheckoutPage() {
             },
           },
         },
-        return_url: `${window.location.origin}/payment-result`, // Replace with your actual success/failure page URL
-        redirect: 'if_required', // Handle SCA redirects
+        return_url: `${window.location.origin}/payment-result`,
       },
+      redirect: 'if_required', // Keeping it for now, might remove if issues persist
     });
 
     setIsProcessing(false);
 
     if (error) {
       setError(error.message || 'An unexpected error occurred.');
-    } else {
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       console.log('Payment successful!');
       alert('Payment successful!');
       // Here you would typically send order details to your backend
+    } else if (paymentIntent && paymentIntent.status === 'requires_action') {
+      // This handles cases like 3D Secure where a redirect is needed
+      stripe.confirmCardPayment(paymentIntent.client_secret);
     }
   };
 
