@@ -55,6 +55,7 @@ function CheckoutPage() {
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       console.log('Payment successful!');
       alert('Payment successful!');
+      window.location.href = '/payment-result'; 
       // Here you would typically send order details to your backend
     } else if (paymentIntent && paymentIntent.status === 'requires_action') {
       // This handles cases like 3D Secure where a redirect is needed
