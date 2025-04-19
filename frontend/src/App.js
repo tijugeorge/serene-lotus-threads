@@ -1,8 +1,8 @@
 // In frontend/src/App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import CheckoutPage from './pages/CheckoutPage'; // Assuming CheckoutPage is in the same 'pages' directory
-import PaymentResult from './pages/PaymentResult'; // Correct import path
+import CheckoutPage from './pages/CheckoutPage';
+import PaymentResult from './pages/PaymentResult';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/payment-result" element={<PaymentResult />} />
-        <Route path="/" element={/* Your homepage component */} />
+        <Route path="/" element={<div><h1>Welcome to our Store!</h1><p>This is the homepage.</p></div>} />
       </Routes>
     </div>
   );
