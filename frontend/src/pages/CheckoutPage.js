@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 function CheckoutPage() {
+  const stripe = useStripe();
+  const elements = useElements();
   const [shippingInfo, setShippingInfo] = useState({
     name: '',
     address: '',
@@ -8,8 +11,8 @@ function CheckoutPage() {
     postalCode: '',
     country: '',
   });
-  const [paymentIntentClientSecret, setPaymentIntentClientSecret] = useState(null);
   const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -19,45 +22,52 @@ function CheckoutPage() {
     }));
   };
 
-  const handleCheckout = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js has not loaded yet. Make sure to disable
+      // form submission until Stripe.js is loaded.
+      return;
+    }
+
+    setIsProcessing(true);
     setError(null);
-    try {
-      const response = await fetch('https://serene-lotus-threads-backend.onrender.com/api/create-payment-intent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        // Make sure to collect billing details if required by your Stripe account
+        billing_details: {
+          name: shippingInfo.name,
+          address: {
+            line1: shippingInfo.address,
+            city: shippingInfo.city,
+            postal_code: shippingInfo.postalCode,
+            country: shippingInfo.country,
+          },
         },
-        body: JSON.stringify({
-          amount: 10000, // Sample amount (in cents for USD, adjust for AED if needed later)
-          currency: 'usd', // Sample currency, change to 'aed' later if that's your primary
-        }),
-      });
+      },
+      redirect: 'if_required', // Handle SCA redirects
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData?.error || 'Unknown error'}`);
-      }
+    setIsProcessing(false);
 
-      const data = await response.json();
-      setPaymentIntentClientSecret(data.clientSecret);
-      console.log('PaymentIntent Client Secret:', data.clientSecret);
-      alert('PaymentIntent created successfully! (Check console for client secret)');
-
-      // In a real integration, you would now use the clientSecret
-      // to confirm the payment with Stripe using Stripe's SDK.
-
-    } catch (e) {
-      setError(e.message);
-      console.error('Error creating PaymentIntent:', e);
-      alert(`Failed to initiate checkout: ${e.message}`);
+    if (error) {
+      setError(error.message || 'An unexpected error occurred.');
+    } else {
+      // Payment is successful!
+      console.log('Payment successful!');
+      alert('Payment successful!');
+      // Here you would typically send order details to your backend
     }
   };
 
   return (
     <div>
       <h1>Checkout</h1>
-      <form onSubmit={(e) => { e.preventDefault(); handleCheckout(); }}>
-        {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      <form onSubmit={handleSubmit}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <div>
           <label htmlFor="name">Name:</label>
           <input
@@ -69,28 +79,15 @@ function CheckoutPage() {
             required
           />
         </div>
-        <div>
-          <label htmlFor="address">Address:</label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            value={shippingInfo.address}
-            onChange={handleChange}
-            required
-          />
-        </div>
         {/* ... other shipping fields ... */}
         <div>
           <h2>Payment Information</h2>
-          {/* Placeholder for Stripe Payment Element will go here later */}
-          <p>Payment details will be integrated here (Stripe skipped for now)</p>
+          <PaymentElement />
         </div>
-        <button type="submit">Place Order</button>
+        <button type="submit" disabled={isProcessing || !stripe || !elements}>
+          {isProcessing ? 'Processing...' : 'Place Order'}
+        </button>
       </form>
-      {paymentIntentClientSecret && (
-        <p>Client Secret: {paymentIntentClientSecret}</p>
-      )}
     </div>
   );
 }
