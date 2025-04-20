@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
 import './index.css';
 
 const stripePromise = loadStripe('pk_test_51RFTiPHJUgc1OTCAj2p6obSJhSU5l0TJXCsUZPllh7CtMzDb45FePDrsCDjTNNU3QSwFBFnvrxYa60xWCL8w0Cmm00q4hgGd0z');
@@ -12,9 +13,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const renderApp = (clientSecret) => {
   root.render(
     <React.StrictMode>
-      <Elements stripe={stripePromise} options={{ clientSecret }}>
-        <App />
-      </Elements>
+      <BrowserRouter> {/* Wrap App with BrowserRouter */}
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <App />
+        </Elements>
+      </BrowserRouter>
     </React.StrictMode>
   );
 };

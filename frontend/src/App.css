@@ -36,3 +36,149 @@
     transform: rotate(360deg);
   }
 }
+
+/* New styles for the homepage layout */
+body, html { /* Apply to both body and html for broader coverage */
+  font-family: sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f8f8f8 !important; /* Use !important to try and override */
+  color: #333 !important;
+}
+
+nav {
+  background-color: #eee; /* Light gray nav background */
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #007bff; /* Blue link color */
+  font-weight: bold;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #fff; /* White hero background */
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #28a745; /* Green headline color */
+}
+
+.hero p {
+  font-size: 1.1em;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.hero button {
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.featured-gym-wear {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.featured-gym-wear h2 {
+  font-size: 2em;
+  margin-bottom: 15px;
+  color: #28a745;
+  text-align: center;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  text-align: center;
+}
+
+.product {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.our-story-snippet {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: auto; /* Clear float */
+}
+
+.our-story-snippet h3 {
+  font-size: 1.8em;
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.our-story-snippet p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.key-benefits {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.key-benefits h2 {
+  font-size: 2em;
+  margin-bottom: 15px;
+  color: #28a745;
+  text-align: center;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.benefit {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
+  color: #777;
+  border-top: 1px solid #eee;
+}
